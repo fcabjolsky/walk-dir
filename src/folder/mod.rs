@@ -13,20 +13,16 @@ impl Folder {
         Folder { path }
     }
 
+    /// Creates an iterator of the files in the folder only one level
     pub fn files(self) -> Files {
-        Files {
-            folder_iter: std::fs::read_dir(self.path).expect("Can't read the inital Folder"),
-            queue: VecDeque::new(),
-            deep: false,
-        }
+        Files::new(self.path, false)
     }
 
+    /// Creates an deep iterator of the files in the folder and the
+    /// files of the folders inside a the childs folders. The order of the 
+    /// iteration may not be consisten
     pub fn files_deep(self) -> Files {
-        Files {
-            folder_iter: std::fs::read_dir(self.path).expect("Can't read the inital Folder"),
-            queue: VecDeque::new(),
-            deep: true,
-        }
+        Files::new(self.path, true)
     }
 }
 
@@ -34,6 +30,16 @@ pub struct Files {
     folder_iter: ReadDir,
     queue: VecDeque<PathBuf>,
     deep: bool,
+}
+
+impl Files {
+    fn new(path: PathBuf, deep: bool) -> Files {
+        Files {
+            folder_iter: std::fs::read_dir(path).expect("Can't read the inital Folder"),
+            queue: VecDeque::new(),
+            deep,
+        }
+    }
 }
 
 impl Iterator for Files {
