@@ -1,17 +1,11 @@
-use std::path::PathBuf;
+mod folder;
+use folder::Folder;
 
 fn main() {
-    walk(std::env::current_dir().unwrap());
-}
-
-fn walk(path: PathBuf) {
-    for f in std::fs::read_dir(path).unwrap() {
-        let f = f.unwrap();
-        println!("{}", f.path().to_str().unwrap());
-        if f.path().is_dir() {
-            walk(f.path());
-        }
+    let folder = Folder::new(std::env::current_dir().unwrap());
+    for file in folder.files() {
+        println!("{}", file.path().to_str().unwrap());
     }
-
 }
+
 
