@@ -6,6 +6,7 @@ fn main() {
     for file in folder.files() {
         println!("{}", file.path().to_str().unwrap());
     }
+    println!("{:?}", folder);
 }
 
 
